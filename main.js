@@ -1,50 +1,46 @@
-
-
 // Defining text characters for the empty and full hearts for you to use later.
 const EMPTY_HEART = '♡'
 const FULL_HEART = '♥'
 
 // Your JavaScript code goes here!
-const likeBtn = document.querySelectorAll('.like-glyph');
-const errorModal = document.getElementById('modal');
-likeBtn.forEach( el => {
-  el.addEventListener('click',()=>{
-    const e=event.target;
-    mimicServerCall()
-    .then(response => {
-      if(e.innerHTML === FULL_HEART){
-        removeHeart(e)
-      }
-      else{
-        addHeart(e)
-      }
-    })
-    .catch( err => {
-      console.log(err)
-      showError();
-    })
-  })
-})
-function showError(){
-  errorModal.classList.remove('hidden');
-  setTimeout(()=>errorModal.classList.add('hidden'),5000);
-}
-function addHeart(target){
-  //const likeSpan = document.getElementsByClassName('like-glyph')[0];
-  target.innerHTML = FULL_HEART;
-  target.classList.add('activated-heart');
-}
-function removeHeart(target){
-  target.innerHTML = EMPTY_HEART;
-  target.classList.remove('activated-heart');
+const modal = document.getElementById('modal');
+const hearts = document.getElementsByClassName('like-glyph')
+const likeBtns = document.getElementsByClassName('like')
+const  modalMessage = document.querySelector('#modal-message');
+
+hidesModalError();
+for(const likeBtn of likeBtns){
+  likeBtn.addEventListener('click',likebtnEvent)
 }
 
-// document.querySelectorAll(".like-glyph").forEach(el => {
-//   el.addEventListener("click", function() {
-//     console.log(event.target);
-//     addHeart(event.target);
-//   })
-// });
+function likebtnEvent(e){
+  mimicServerCall()
+  .then(() => {
+    heartChange(e)
+    })
+  .catch((error) => {
+   modal.classList.remove('hidden')
+   modalMessage.innerText = "error hidden modal"
+   setTimeout(hidesModalError, 5000);
+  })
+}
+
+function heartChange(e){
+  let heart=e.target;
+  heart.innerText== EMPTY_HEART
+  ?(heart.innerText= FULL_HEART, heart.classList.add('activated-heart'))
+  :(heart.innerText= EMPTY_HEART, heart.classList.remove('activated-heart'))
+}
+
+function hidesModalError() {
+  modal.classList.add("hidden")
+}
+function showModalError() {
+  modal.classList.remove("hidden")
+}
+
+
+
 //------------------------------------------------------------------------------
 // Ignore after this point. Used only for demo purposes
 //------------------------------------------------------------------------------
